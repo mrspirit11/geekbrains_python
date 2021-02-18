@@ -41,7 +41,8 @@ def thesaurus_adv(*args: str) -> dict:
 by_names = thesaurus("Иван", "Мария", "Петр", "Илья")
 # Реверс в сортировке сделал для наглядности
 by_names_sorted = dict(sorted(by_names.items(), key=lambda x: x[0].lower(), reverse=True))
-by_surname = thesaurus_adv("Иван Сергеев", "Инна Серова", "Петр Алексеев", "Илья Иванов", "Анна Савельева")
+by_surname = thesaurus_adv("Иван Сергеев", "Алла Сидорова", "Инна Серова",
+                           "Петр Алексеев", "Илья Иванов", "Анна Савельева", "Василий Суриков")
 
-print(by_names, by_names_sorted, sep='\n\n', end='\n\n')
+print(by_names, f'Отсортерованный список:\n{by_names_sorted}', sep='\n\n', end='\n\n')
 pp(by_surname)
