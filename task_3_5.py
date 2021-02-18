@@ -24,10 +24,10 @@ def get_jokes(numb_of_jokes=1, no_repeat=False):
     if no_repeat and check_numb_of_jokes:
         list(map(shuffle, [nouns, adverbs, adjectives]))
         return [f"{nouns.pop()} {adverbs.pop()} {adjectives.pop()}" for _ in range(numb_of_jokes)]
-    elif not check_numb_of_jokes:
+    elif no_repeat and not check_numb_of_jokes:
         return 'Кол-во слов меньше кол-ва шуток'
     else:
         return [' '.join(choice(list(zip(nouns, adverbs, adjectives)))) for _ in range(numb_of_jokes)]
 
 
-print(get_jokes(2, no_repeat=True))
+print(get_jokes(1000, no_repeat=False))
