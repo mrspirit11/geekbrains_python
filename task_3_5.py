@@ -20,14 +20,12 @@ adjectives = ["веселый", "яркий", "зеленый", "утопичн�
 
 
 def get_jokes(numb_of_jokes=1, no_repeat=False):
-    check_numb_of_jokes = all(map(lambda x: len(x) >= numb_of_jokes, [nouns, adverbs, adjectives]))
-    if no_repeat and check_numb_of_jokes:
+    if no_repeat:
         list(map(shuffle, [nouns, adverbs, adjectives]))
-        return [f"{nouns.pop()} {adverbs.pop()} {adjectives.pop()}" for _ in range(numb_of_jokes)]
-    elif no_repeat and not check_numb_of_jokes:
-        return 'Кол-во слов меньше кол-ва шуток'
+        min_list_len = min(map(len, [nouns, adverbs, adjectives]))
+        return [f"{nouns.pop()} {adverbs.pop()} {adjectives.pop()}" for _ in range(min_list_len)]
     else:
         return [' '.join(choice(list(zip(nouns, adverbs, adjectives)))) for _ in range(numb_of_jokes)]
 
 
-print(get_jokes(1000, no_repeat=False))
+print(get_jokes(10, no_repeat=True))
