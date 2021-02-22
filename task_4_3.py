@@ -33,7 +33,7 @@ def currency_rates(currency_code: str) -> (datetime, float):
     for s in response.split('</Valute>'):
         if 'Valute' in s:
             valute_info.update(str_to_dict(s))
-    return valute_info['Date'], valute_info[currency_code]['V/N'] if valute_info.get(currency_code) else None
+    return valute_info['Date'], valute_info[currency_code.upper()]['V/N'] if valute_info.get(currency_code.upper()) else None
 
 if __name__ == "__main__":
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     for param in sys.argv[1:]:
             date, value = currency_rates(param)
             date = date.strftime("%d.%m.%Y")
-            print (param, f'{value:.2f}', date, sep=', ')
+            print (f'{value:.2f}', date, sep=', ')
 
             # python3 task_4_3.py USD EUR AMD
             # USD, 73.98, 21.02.2021
