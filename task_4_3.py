@@ -7,12 +7,12 @@
 # 75.18, 2020-09-05
 
 from datetime import datetime
-import requests, sys
+import requests
 
 URL = 'http://www.cbr.ru/scripts/XML_daily.asp'
 
 
-def currency_rates(currency_code: str) -> (datetime, float):
+def currency_rates(currency_code: str, url=URL) -> (datetime, float):
     def str_to_dict(text: str) -> dict:
         char_name = text[text.find('CharCode>'):text.find('</CharCode>')].split('>')
         out_dict = {char_name[1]: {}}
@@ -26,29 +26,36 @@ def currency_rates(currency_code: str) -> (datetime, float):
         out_dict[char_name[1]]['V/N'] = out_dict[char_name[1]]['Value'] / float(out_dict[char_name[1]]['Nominal'])
         return out_dict
 
-    response = requests.get(URL).text
+    response = requests.get(url).text
     valute_info = {}
     _date = response[response.find('Date='):response.find('name')].strip().split('=')
-    valute_info[_date[0]] = datetime.strptime(_date[1], '"%d.%m.%Y"')
+    valute_info[_date[0]] = datetime.strptime(_date[1], '"%d.%m.%Y"').date()
     for s in response.split('</Valute>'):
         if 'Valute' in s:
             valute_info.update(str_to_dict(s))
-    return valute_info['Date'], valute_info[currency_code.upper()]['V/N'] if valute_info.get(currency_code.upper()) else None
+    return valute_info['Date'], valute_info[currency_code.upper()]['V/N'] if valute_info.get(
+        currency_code.upper()) else None
+
 
 if __name__ == "__main__":
-
+    import sys
     # test 4_2-4_3
     # CURRENCY_CODES = ['USD', 'EUR', 'q', 'AMD']
     # for cur in CURRENCY_CODES:
     #     print(currency_rates(cur))
 
+    # (datetime.date(2021, 2, 21), 73.9833)
+    # (datetime.date(2021, 2, 21), 89.6604)
+    # (datetime.date(2021, 2, 21), None)
+    # (datetime.date(2021, 2, 21), 0.14106)
+
     # task 4_5
     for param in sys.argv[1:]:
-            date, value = currency_rates(param)
-            date = date.strftime("%d.%m.%Y")
-            print (f'{value:.2f}', date, sep=', ')
+        date, value = currency_rates(param)
+        date = date.strftime("%d.%m.%Y")
+        print(f'{value:.2f}', date, sep=', ')
 
-            # python3 task_4_3.py USD EUR AMD
-            # USD, 73.98, 21.02.2021
-            # EUR, 89.66, 21.02.2021
-            # AMD, 0.14, 21.02.2021
+    # python3 task_4_3.py USD EUR AMD
+    # USD, 73.98, 21.02.2021
+    # EUR, 89.66, 21.02.2021
+    # AMD, 0.14, 21.02.2021
