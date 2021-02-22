@@ -12,7 +12,7 @@ import requests, sys
 URL = 'http://www.cbr.ru/scripts/XML_daily.asp'
 
 
-def currency_rates(currency_code: str) -> (datetime, float):
+def currency_rates(currency_code: str, url=URL) -> (datetime, float):
     def str_to_dict(text: str) -> dict:
         char_name = text[text.find('CharCode>'):text.find('</CharCode>')].split('>')
         out_dict = {char_name[1]: {}}
@@ -26,7 +26,7 @@ def currency_rates(currency_code: str) -> (datetime, float):
         out_dict[char_name[1]]['V/N'] = out_dict[char_name[1]]['Value'] / float(out_dict[char_name[1]]['Nominal'])
         return out_dict
 
-    response = requests.get(URL).text
+    response = requests.get(url).text
     valute_info = {}
     _date = response[response.find('Date='):response.find('name')].strip().split('=')
     valute_info[_date[0]] = datetime.strptime(_date[1], '"%d.%m.%Y"')
