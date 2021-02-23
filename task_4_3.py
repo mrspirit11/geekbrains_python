@@ -1,4 +1,4 @@
-# 2.	Написать функцию currency_rates(), принимающую в качестве аргумента код валюты (USD, EUR, ...) и возвращающую курс этой валюты по отношению к рублю. Использовать библиотеку requests. В качестве API можно использовать http://www.cbr.ru/scripts/XML_daily.asp. Рекомендация: выполнить предварительно запрос к API в обычном браузере, посмотреть содержимое ответа. Можно ли, используя только методы класса str, решить поставленную задачу? Функция должна возвращать результат числового типа, например float. Подумайте: есть ли смысл для работы с денежными величинами использовать вместо float тип Decimal? Сильно ли усложняется код функции при этом? Если в качестве аргумента передали код валюты, которого нет в ответе, вернуть None. Можно ли сделать работу функции не зависящей от того, в каком регистре был передан аргумент? В качестве примера выведите курсы доллара и евро.
+# 2.	Написать функцию currency_rates(), принимающую в качестве аргумента код валюты (USD, EUR, ...) и возвращающую курс этой валюты по отношению к рублю. Использовать библиотеку requests. В качестве API можно использовать http://www.cbr.ru/scripts/XML_daily.asp. Рекомендация: выполнить предварительно запрос к API в обычном браузере, посмотреть содержимое ответа. Можно ли, используя только методы класса str, решить поставленную задачу? Функция должна возвращать результат числового типа, например Decimal. Подумайте: есть ли смысл для работы с денежными величинами использовать вместо Decimal тип Decimal? Сильно ли усложняется код функции при этом? Если в качестве аргумента передали код валюты, которого нет в ответе, вернуть None. Можно ли сделать работу функции не зависящей от того, в каком регистре был передан аргумент? В качестве примера выведите курсы доллара и евро.
 #
 # 3.	*(вместо 2) Доработать функцию currency_rates(): теперь она должна возвращать кроме курса дату, которая передаётся в ответе сервера. Дата должна быть в виде объекта date. Подумайте, как извлечь дату из ответа, какой тип данных лучше использовать в ответе функции?
 
@@ -8,11 +8,13 @@
 
 from datetime import datetime
 import requests
+from decimal import Decimal
+
 
 URL = 'http://www.cbr.ru/scripts/XML_daily.asp'
 
 
-def currency_rates(currency_code: str, url=URL) -> (datetime, float):
+def currency_rates(currency_code: str, url=URL) -> (datetime, Decimal):
     def str_to_dict(text: str) -> dict:
         char_name = text[text.find('CharCode>'):text.find('</CharCode>')].split('>')
         out_dict = {char_name[1]: {}}
@@ -21,9 +23,9 @@ def currency_rates(currency_code: str, url=URL) -> (datetime, float):
         for start_str, end_str in str_to_find:
             _str = text[text.find(start_str):text.find(end_str)].split('>')
             if 'Val' in start_str:
-                _str[1] = float(_str[1].replace(',', '.'))
+                _str[1] = Decimal(_str[1].replace(',', '.'))
             out_dict[char_name[1]][_str[0]] = _str[1]
-        out_dict[char_name[1]]['V/N'] = out_dict[char_name[1]]['Value'] / float(out_dict[char_name[1]]['Nominal'])
+        out_dict[char_name[1]]['V/N'] = out_dict[char_name[1]]['Value'] / Decimal(out_dict[char_name[1]]['Nominal'])
         return out_dict
 
     response = requests.get(url).text
@@ -40,9 +42,9 @@ def currency_rates(currency_code: str, url=URL) -> (datetime, float):
 if __name__ == "__main__":
     import sys
     # test 4_2-4_3
-    # CURRENCY_CODES = ['USD', 'EUR', 'q', 'AMD']
-    # for cur in CURRENCY_CODES:
-    #     print(currency_rates(cur))
+    CURRENCY_CODES = ['USD', 'EUR', 'q', 'AMD']
+    for cur in CURRENCY_CODES:
+        print(currency_rates(cur))
 
     # (datetime.date(2021, 2, 21), 73.9833)
     # (datetime.date(2021, 2, 21), 89.6604)
