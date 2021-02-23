@@ -19,19 +19,17 @@ def odd_nums(num: int):
         yield el
 
 
-odd_to_15 = odd_nums(15)
-print(type(odd_to_15))
-for i in odd_to_15:
-    print(i, end=',')
-print()
-# <class 'generator'>
-# 1,3,5,7,9,11,13,15,
-
 n = 15
+next_i = (lambda x: next(x) for _ in range(n+1))
+
+# odd_to_15 = odd_nums(n)
+# print(type(odd_to_15))
+# for i in next_i:
+#     print(i(odd_to_15))
+
 odd_nums_adv = (i for i in range(1, n + 1, 2))
 odd_to_15 = odd_nums_adv
 print(type(odd_to_15))
-for i in odd_to_15:
-    print(i, end=',')
-# <class 'generator'>
-# 1,3,5,7,9,11,13,15,
+for i in next_i:
+    print(i(odd_to_15))
+
