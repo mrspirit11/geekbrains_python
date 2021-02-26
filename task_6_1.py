@@ -11,11 +11,12 @@
 # Примечание: код должен работать даже с файлами, размер которых превышает объем ОЗУ компьютера.
 # *(вместо 1) Найти IP адрес спамера и количество отправленных им запросов по данным файла логов из предыдущего задания.
 # Примечания: спамер — это клиент, отправивший больше всех запросов; код должен работать даже с файлами, размер которых превышает объем ОЗУ компьютера.
-import re
 
-from requests import get, codes
+
 import os
+from requests import get, codes
 import sys
+
 
 def get_file(url: str, make_dir=True) -> str:
     """Download file from url. Return path to downloaded file.
@@ -30,7 +31,7 @@ def get_file(url: str, make_dir=True) -> str:
     if response.status_code == codes.ok:
         file_path = os.path.join(path, url.split('/')[-1] + '.txt')
         # проверка наличия файла и сравнение файлов по размеру (недостаток все равно нужно скачать инфу)
-        if os.path.isfile(file_path) and abs(os.path.getsize(file_path)-sys.getsizeof(response.content)) < 50:
+        if os.path.isfile(file_path) and abs(os.path.getsize(file_path) - sys.getsizeof(response.content)) < 50:
             print(f'{file_path} already in folder, skip download.')
         # Проверка наличия и размера файла
         # if os.path.isfile(file_path) and os.path.getsize(file_path):
@@ -45,12 +46,26 @@ def get_file(url: str, make_dir=True) -> str:
         print(f'ERROR: response status code {response.status_code}')
 
 
-def read_logs_file(path_to_file):
+def read_logs_file(path_to_file: str) -> list:
     with open(path_to_file) as f_in:
-        return [(lambda x: (x[0], re.search(r'\w+', x[5])[0], x[6]))(line.split()) for line in f_in]
+        return [(lambda x: (x[0], x[5][1:], x[6]))(line.split()) for line in f_in]
+
+
+def find_spammer(s_list: list) -> tuple:
+    out_dict = {}
+    for i in s_list:
+        out_dict.setdefault(i[0], 0)
+        out_dict[i[0]] += 1
+    max_requests_ip = sorted(out_dict, key=lambda x: out_dict[x])[-1]
+    return max_requests_ip, out_dict[max_requests_ip]
 
 
 if __name__ == '__main__':
+    from pprint import pprint as pp
+
     URL = 'https://github.com/elastic/examples/raw/master/Common%20Data%20Formats/nginx_logs/nginx_logs'
     file = get_file(URL)
-    print(read_logs_file(file)[0])
+    from_file = read_logs_file(file)
+    spammer = find_spammer(from_file)
+    print(spammer)
+    pp(from_file[:5])
