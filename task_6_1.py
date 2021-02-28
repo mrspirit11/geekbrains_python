@@ -18,7 +18,7 @@ from requests import get, codes
 import sys
 
 
-def get_file(url: str, make_dir=True) -> str:
+def download_file(url: str, make_dir=True) -> str:
     """Download file from url. Return path to downloaded file.
     Params: url address,
             make_dir=True (make dir 'Download' in project directory"""
@@ -51,21 +51,23 @@ def read_logs_file(path_to_file: str) -> list:
         return [(lambda x: (x[0], x[5][1:], x[6]))(line.split()) for line in f_in]
 
 
-def find_spammer(s_list: list) -> tuple:
+def find_spammer(s_list: list) -> list:
     out_dict = {}
     for i in s_list:
         out_dict.setdefault(i[0], 0)
         out_dict[i[0]] += 1
-    max_requests_ip = sorted(out_dict, key=lambda x: out_dict[x])[-1]
-    return max_requests_ip, out_dict[max_requests_ip]
+    max_requests_ip = sorted(out_dict, key=lambda x: out_dict[x], reverse=True)[:10]
+    return [(ip, out_dict[ip]) for ip in max_requests_ip]
 
 
 if __name__ == '__main__':
     from pprint import pprint as pp
-
     URL = 'https://github.com/elastic/examples/raw/master/Common%20Data%20Formats/nginx_logs/nginx_logs'
-    file = get_file(URL)
+    file = download_file(URL)
     from_file = read_logs_file(file)
     spammer = find_spammer(from_file)
-    print(spammer)
+    print('Подозрительные запросы:')
+    pp(spammer)
+    print('Логи')
     pp(from_file[:5])
+
