@@ -47,7 +47,7 @@ def download_file(url: str, make_dir=True) -> str:
 
 
 def read_logs_file(path_to_file: str) -> list:
-    with open(path_to_file) as f_in:
+    with open(path_to_file, encoding='UTF-8') as f_in:
         return [(lambda x: (x[0], x[5][1:], x[6]))(line.split()) for line in f_in]
 
 
