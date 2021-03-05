@@ -13,7 +13,7 @@ import os
 
 
 def get_all_size(s_path: str, max_size=9) -> tuple:
-    full_path = (obj[0] + '/' + f for obj in os.walk(s_path) for f in obj[2])
+    full_path = (os.path.join(obj[0], f) for obj in os.walk(s_path) for f in obj[2])
     path_to_files = ((os.path.getsize(i), os.path.splitext(i)[1]) for i in full_path if os.path.isfile(i))
 
     sizes = {}
