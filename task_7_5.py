@@ -9,7 +9,8 @@
 #     }
 # Сохраните результаты в файл <folder_name>_summary.json в той же папке, где запустили скрипт.
 
-import os
+import os, json
+import copy
 
 
 def get_all_size(s_path: str, max_size=9) -> tuple:
@@ -31,9 +32,21 @@ def get_all_size(s_path: str, max_size=9) -> tuple:
     return sizes, files_count
 
 
+def json_save(dir_name: str, s_dict: dict):
+    obj = copy.copy(s_dict)
+    for key in obj:
+        if isinstance(obj[key][1], set):
+            obj[key] = list(obj[key][1])
+    with open(f'{dir_name}_summary.json', 'w') as f_out:
+        json.dump(obj, f_out)
+    print('File saved')
+
+
+
 if __name__ == '__main__':
     from pprint import pprint as pp
-
-    sizes_dict, files_count = get_all_size(os.curdir)
+    dir_path = os.path.join('.')
+    sizes_dict, files_count = get_all_size(dir_path)
     print(f'Файлов на диске: {files_count}', f'Файлов обработано: {sum(i[0] for i in sizes_dict.values())}', sep='\n')
     pp(sizes_dict)
+    json_save(os.path.basename(dir_path), sizes_dict)
