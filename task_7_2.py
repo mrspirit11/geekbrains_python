@@ -25,6 +25,7 @@
 # Усложнение Библиотеки для парсинга yaml использовать нельзя.
 
 import yaml
+import os
 from os import path
 
 def make_yaml(s_dict, file_name='config.yaml'):
