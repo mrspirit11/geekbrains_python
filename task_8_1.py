@@ -29,5 +29,18 @@ def email_parse(s_str: str) -> dict:
         raise ValueError(f'wrong email: {s_str}')
 
 
+def log_parse(file_path: str) -> list:
+    try:
+        log_regex = re.compile(r'(\b[\w\.:]+\b).+(?:\[(.+)\]) "(\w+) ((?:/\w+){2,}).+" (\d+) (\d+)')
+        with open(file_path) as f_in:
+            out_list = []
+            for f_str in f_in:
+                out_list.extend(log_regex.findall(f_str))
+        return out_list
+    except FileNotFoundError as e:
+        print(f'file error {e.filename}')
+
+
 if __name__ == '__main__':
-    print(email_parse('mrspirit11@gmail.com'))
+    # print(email_parse('mrspirit11@gmail.com'))
+    print(log_parse('nginx_logs.txt'))
