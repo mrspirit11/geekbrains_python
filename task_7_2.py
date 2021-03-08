@@ -28,20 +28,22 @@ import yaml
 import os
 from os import path
 
+
 def make_yaml(s_dict, file_name='config.yaml'):
-    with open(file_name, 'w') as f_out:
+    with open(file_name, 'w', encoding='utf-8') as f_out:
         f_out.write(yaml.dump(s_dict))
 
 
 def read_yaml(path_to_file='config.yaml'):
-    with open(path_to_file) as f_in:
+    with open(path_to_file, encoding='utf-8') as f_in:
         return yaml.load(f_in, Loader=yaml.FullLoader)
 
 
 def make_files(s_dict):
     out_path = []
     st = ''
-    def req(s_dict, key = None):
+
+    def req(s_dict, key=None):
         nonlocal st
         if key:
             st += key + '/'

@@ -42,7 +42,6 @@ def json_save(dir_name: str, s_dict: dict):
     print('File saved')
 
 
-
 if __name__ == '__main__':
     from pprint import pprint as pp
     dir_path = os.path.join('.')
