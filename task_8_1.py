@@ -22,7 +22,7 @@ import re
 
 
 def email_parse(s_str: str) -> dict:
-    email_regex = re.match(r'(?P<username>\w+)@(?P<domain>\w+\.\w+)', s_str)
+    email_regex = re.match(r"(?P<username>[\w'._+-]+)@(?P<domain>\w+\.\w+)", s_str)
     if email_regex:
         return email_regex.groupdict()
     else:
@@ -42,5 +42,5 @@ def log_parse(file_path: str) -> list:
 
 
 if __name__ == '__main__':
-    # print(email_parse('mrspirit11@gmail.com'))
-    print(log_parse('nginx_logs.txt'))
+    print(email_parse('mr.sp_i+rit11@gmail.com'))
+    # print(log_parse('nginx_logs.txt'))
