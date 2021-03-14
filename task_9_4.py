@@ -13,26 +13,24 @@ class Car:
         self.name = name
         self.is_police = is_police
 
-
     def go(self): 
         print('Машина поехала')
-
 
     def stop(self):
         print('Машина остановилась')
 
-
     def turn(self, direction): 
         print(f'Машина повернула {direction}')
 
-
     def show_speed(self):
         print(f'Скорость {self.speed}')
+
 
 class TownCar(Car): 
     speed_limit = 60
     def show_speed(self):
         if self.speed > self.speed_limit:
+            # \033[31m Форматирование цвета текста (31 Красный) на Windows < 10 не работает
             print(f'\033[31m Превышение скорости на {self.speed - self.speed_limit} \033[37m')
         else:
             super().show_speed()
