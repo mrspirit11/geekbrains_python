@@ -17,6 +17,7 @@ class Car:
         print('Машина поехала')
 
     def stop(self):
+        self.speed = 0
         print('Машина остановилась')
 
     def turn(self, direction): 
@@ -55,6 +56,6 @@ for car in garage:
     print('*'*10, car.__class__.__name__, '*'*10)
     print(car.name)
     car.go()
-    car.stop()
-    car.turn('left')
     car.show_speed()
+    car.turn('left')
+    car.stop()
