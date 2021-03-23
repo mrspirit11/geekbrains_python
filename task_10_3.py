@@ -46,7 +46,7 @@ class Cell(CellType):
         return Cell(self.cells // oth.cells)
 
     def make_order(self, cells_in_row):
-        return repr(''.join(['*' if i % cells_in_row else '*\n' for i in range(1, self.cells + 1)]))
+        return ''.join(['*' if i % cells_in_row else '*\n' for i in range(1, self.cells + 1)])
 
     def __str__(self):
         return str(self.cells)
